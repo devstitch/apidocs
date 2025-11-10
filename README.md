@@ -1,4 +1,4 @@
-# Content Generator SaaS - API Documentation
+# Marketlytics SaaS - API Documentation
 
 Complete API documentation for integrating WordPress plugin with your SaaS application.
 
@@ -6,7 +6,7 @@ Complete API documentation for integrating WordPress plugin with your SaaS appli
 
 ## Table of Contents
 
-1. [Quick Summary - 3 Main Steps](#-quick-summary---3-main-steps)
+1. [Quick Summary - 4 Main Steps](#-quick-summary---4-main-steps)
 2. [Overview](#overview)
 3. [Authentication](#authentication)
 4. [API Endpoints](#api-endpoints)
@@ -16,17 +16,16 @@ Complete API documentation for integrating WordPress plugin with your SaaS appli
 8. [Testing](#testing)
 9. [Database Schema](#database-schema)
 10. [Blog Post Data Structure](#blog-post-data-structure)
-11. [Product Content Generation](#product-content-generation)
-12. [Rate Limiting (Optional)](#rate-limiting-optional)
-13. [Logging](#logging)
-14. [Environment Variables](#environment-variables)
-15. [Quick Start Checklist](#quick-start-checklist)
-16. [Support & Resources](#support--resources)
-17. [Version History](#version-history)
+11. [Rate Limiting (Optional)](#rate-limiting-optional)
+12. [Logging](#logging)
+13. [Environment Variables](#environment-variables)
+14. [Quick Start Checklist](#quick-start-checklist)
+15. [Support & Resources](#support--resources)
+16. [Version History](#version-history)
 
 ---
 
-## 🎯 Quick Summary - 5 Main Steps
+## 🎯 Quick Summary - 4 Main Steps
 
 ### Step 1: WordPress Connect Button Click
 
@@ -50,7 +49,7 @@ POST /api/v1/connect
   "name": "admin@example.com",
   "secret": "a1b2c3d4e5f6...",
   "webhook": "http://example.com/wp-admin/admin-ajax.php?action=content-generator-notify",
-  "rest": "http://example.com/wp-json/content-generator/v1"
+  "rest": "http://example.com/wp-json/marketlytics/v1"
 }
 ```
 
@@ -89,7 +88,7 @@ POST /api/v1/connect
 **WordPress REST API Hit:**
 
 ```
-POST {wordpress_site_url}/wp-json/content-generator/v1/bulk-posts
+POST {wordpress_site_url}/wp-json/marketlytics/v1/bulk-posts
 ```
 
 **Request Body (SaaS App sends to WordPress):**
@@ -144,82 +143,7 @@ POST {wordpress_site_url}/wp-json/content-generator/v1/bulk-posts
 
 ---
 
-### Step 3: Generate Product Content (WooCommerce)
-
-**User Action:** User clicks "Generate Product Content" button on WooCommerce product edit page
-
-**What WordPress Does:**
-
-- WordPress plugin collects product data (ID, title, description, categories, tags, attributes)
-- WordPress plugin sends product data to SaaS app API
-
-**SaaS App API Hit:**
-
-```
-POST /api/v1/generate-product-content
-```
-
-**Request Body (WordPress sends to SaaS App):**
-
-```json
-{
-  "api_key": "695f5ac984a3f7d2e8b1c9d4e6f8a0b2",
-  "product_data": {
-    "product_id": 123,
-    "title": "Premium Wireless Headphones",
-    "short_description": "High-quality wireless headphones with noise cancellation",
-    "description": "Experience premium sound quality...",
-    "categories": ["Electronics", "Audio"],
-    "tags": ["Wireless", "Premium", "Audio"],
-    "attributes": [
-      {
-        "name": "Color",
-        "values": ["Black", "White", "Blue"]
-      },
-      {
-        "name": "Size",
-        "values": ["Large", "Medium"]
-      }
-    ]
-  }
-}
-```
-
-**What SaaS App Does:**
-
-- SaaS app validates API key
-- SaaS app generates enhanced product content based on product data
-- SaaS app returns generated content (description, short description, SEO meta)
-
-**SaaS App Response:**
-
-```json
-{
-  "success": true,
-  "message": "Product content generated successfully",
-  "content": {
-    "description": "<h2>About Premium Wireless Headphones</h2><p>High-quality wireless headphones...</p><h2>Key Features & Specifications</h2><ul><li><strong>Color:</strong> Black, White, Blue</li></ul>",
-    "short_description": "Premium Premium Wireless Headphones - High quality product with excellent features. Perfect for your needs.",
-    "meta_title": "Premium Wireless Headphones",
-    "meta_description": "High-quality wireless headphones with noise cancellation - Premium Wireless Headphones. Buy now and get the best quality product with fast shipping.",
-    "focus_keyword": "electronics"
-  }
-}
-```
-
-**What WordPress Does:**
-
-- WordPress plugin receives generated content
-- WordPress plugin updates product description
-- WordPress plugin updates short description
-- WordPress plugin sets SEO meta tags (Yoast/Rank Math)
-- WordPress plugin shows success message
-
-**Result:** Product content enhanced and updated! ✅
-
----
-
-### Step 4: Generate New Article
+### Step 3: Generate New Article
 
 **User Action:** User clicks "Generate New Article" button (located right after "Add Post" button on WordPress posts list page) and provides a topic/keyword
 
@@ -283,7 +207,7 @@ POST /api/v1/generate-article
 
 ---
 
-### Step 5: Optimize Existing Article
+### Step 4: Optimize Existing Article
 
 **User Action:** User clicks "Optimize Article" button on WordPress single post edit page
 
@@ -433,9 +357,9 @@ function checkSign(data, secret) {
   "name": "admin@example.com", // Admin email
   "secret": "generated_secret_key", // Secret for signing
   "webhook": "https://example.com/wp-admin/admin-ajax.php?action=content-generator-notify",
-  "rest": "https://example.com/wp-json/content-generator/v1", // REST API base URL
-  "success_url": "https://example.com/wp-admin/options-general.php?page=content-generator-setting&connected=1",
-  "failure_url": "https://example.com/wp-admin/options-general.php?page=content-generator-setting&error=1"
+  "rest": "https://example.com/wp-json/marketlytics/v1", // REST API base URL
+  "success_url": "https://example.com/wp-admin/options-general.php?page=marketlytics-setting&connected=1",
+  "failure_url": "https://example.com/wp-admin/options-general.php?page=marketlytics-setting&error=1"
 }
 ```
 
@@ -692,7 +616,7 @@ When WordPress REST endpoint `/bulk-posts` is called with `count` parameter:
 **WordPress REST Endpoint:**
 
 ```
-POST {wordpress_site_url}/wp-json/content-generator/v1/bulk-posts
+POST {wordpress_site_url}/wp-json/marketlytics/v1/bulk-posts
 ```
 
 **WordPress REST Request Body:**
@@ -827,7 +751,7 @@ $.ajax({
 - WordPress plugin prepares connection data
 
 ```php
-// WordPress Plugin - classes/api-client.php
+// WordPress Plugin - classes/API/Client.php
 // Generate secret key
 $secret = bin2hex(random_bytes(32));
 // Result: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
@@ -841,8 +765,8 @@ $data = [
     'secret' => $secret,            // Generated secret key
     'webhook' => admin_url('admin-ajax.php?action=content-generator-notify'),
     // Result: "http://localhost/wpdev/wp-admin/admin-ajax.php?action=content-generator-notify"
-    'rest' => rest_url('content-generator/v1')
-    // Result: "http://localhost/wpdev/wp-json/content-generator/v1"
+    'rest' => rest_url('marketlytics/v1')
+    // Result: "http://localhost/wpdev/wp-json/marketlytics/v1"
 ];
 ```
 
@@ -876,9 +800,9 @@ Content-Type: application/json
   "name": "admin@example.com",
   "secret": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6",
   "webhook": "http://localhost/wpdev/wp-admin/admin-ajax.php?action=content-generator-notify",
-  "rest": "http://localhost/wpdev/wp-json/content-generator/v1",
-  "success_url": "http://localhost/wpdev/wp-admin/options-general.php?page=content-generator-setting&connected=1",
-  "failure_url": "http://localhost/wpdev/wp-admin/options-general.php?page=content-generator-setting&error=1"
+  "rest": "http://localhost/wpdev/wp-json/marketlytics/v1",
+  "success_url": "http://localhost/wpdev/wp-admin/options-general.php?page=marketlytics-setting&connected=1",
+  "failure_url": "http://localhost/wpdev/wp-admin/options-general.php?page=marketlytics-setting&error=1"
 }
 ```
 
@@ -974,7 +898,7 @@ app.post("/api/v1/connect", async (req, res) => {
   api_key: "695f5ac984a3f7d2e8b1c9d4e6f8a0b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
   secret: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6",
   webhook_url: "http://localhost/wpdev/wp-admin/admin-ajax.php?action=content-generator-notify",
-  rest_url: "http://localhost/wpdev/wp-json/content-generator/v1",
+  rest_url: "http://localhost/wpdev/wp-json/marketlytics/v1",
   status: "connected",
   created_at: ISODate("2025-11-04T10:30:00.000Z"),
   updated_at: ISODate("2025-11-04T10:30:00.000Z")
@@ -1029,7 +953,7 @@ app.post("/api/v1/connect", async (req, res) => {
 - WordPress plugin saves API key and secret to WordPress database (wp_options table)
 
 ```php
-// WordPress Plugin - classes/api-client.php
+// WordPress Plugin - classes/API/Client.php
 // After receiving response from SaaS app
 
 // Save API key to WordPress database
@@ -1091,7 +1015,7 @@ When SaaS app needs to send blog posts to WordPress (manually or automatically)
 
 - Client sends request to WordPress REST API to generate bulk blog posts
 
-**WordPress REST API Endpoint:** `POST {wordpress_site_url}/wp-json/content-generator/v1/bulk-posts`
+**WordPress REST API Endpoint:** `POST {wordpress_site_url}/wp-json/marketlytics/v1/bulk-posts`
 
 **Request Body (Client sends to WordPress):**
 
@@ -1112,7 +1036,7 @@ When SaaS app needs to send blog posts to WordPress (manually or automatically)
 - WordPress calls SaaS `/api/v1/generate-article` API with `count` parameter
 
 ```javascript
-// WordPress Plugin - content-generator.php
+// WordPress Plugin - content-generator.php (Main plugin file)
 // Validates signature
 if (!checkSign($post, $settings['secret'])) {
   return error('Invalid signature');
@@ -1234,7 +1158,7 @@ $results = $blogHandler->createBulkPosts($data['articles']);
 **6. WordPress Plugin Processing (Complete Code):**
 
 ```php
-// WordPress Plugin - content-generator.php
+// WordPress Plugin - content-generator.php (Main plugin file)
 public function restBulkPosts($request) {
     // Get request data from SaaS app
     $post = $request->get_json_params();
@@ -1268,8 +1192,8 @@ public function restBulkPosts($request) {
     }
 
     // Load blog handler
-    require_once($this->plugin_path . 'classes/blog-handler.php');
-    $blogHandler = new \ContentGenerator\BlogHandler($this);
+    require_once($this->plugin_path . 'classes/Blog/Handler.php');
+    $blogHandler = new \ContentGenerator\Blog\Handler($this);
 
     // Create bulk posts
     $results = $blogHandler->createBulkPosts($post['posts']);
@@ -1405,7 +1329,7 @@ app.post("/api/v1/generate-blogs", async (req, res) => {
 
   // Send to WordPress
   const response = await axios.post(
-    `${site.site_url}/wp-json/content-generator/v1/bulk-posts`,
+    `${site.site_url}/wp-json/marketlytics/v1/bulk-posts`,
     postsData,
     { headers: { "Content-Type": "application/json" } }
   );
@@ -1422,7 +1346,7 @@ app.post("/api/v1/generate-blogs", async (req, res) => {
 **2. WordPress Plugin Receives & Processes:**
 
 ```php
-// WordPress Plugin - content-generator.php
+// WordPress Plugin - content-generator.php (Main plugin file)
 public function restBulkPosts($request) {
     $post = $request->get_json_params();
 
@@ -1465,304 +1389,7 @@ public function restBulkPosts($request) {
 
 ---
 
-### 📦 Step 3: Generate Product Content - Complete Flow
-
-#### User Action:
-
-User clicks "Generate Product Content" button on WooCommerce product edit page
-
----
-
-#### Step-by-Step Flow:
-
-**Step 3.1: WordPress Frontend (JavaScript)**
-
-**What WordPress Does:**
-
-- User clicks "Generate Product Content" button
-- JavaScript sends AJAX request to WordPress backend
-
-```javascript
-// WordPress Plugin - assets/js/settings.js
-// User clicks button → AJAX call triggered
-$.ajax({
-  url: ajaxurl,
-  type: "POST",
-  data: {
-    action: "cg_generate_product_content",
-    nonce: ajax_var.generate_product_nonce,
-    product_id: productId,
-  },
-});
-```
-
----
-
-**Step 3.2: WordPress Backend (PHP) - Collect Product Data**
-
-**What WordPress Does:**
-
-- WordPress plugin gets product from WooCommerce
-- WordPress plugin collects product data (ID, title, description, categories, tags, attributes)
-
-```php
-// WordPress Plugin - classes/settings-form.php
-// Get product
-$product = wc_get_product($product_id);
-
-// Collect product data
-$product_data = [
-    'product_id' => $product_id,
-    'title' => $product->get_name(),
-    'short_description' => $product->get_short_description(),
-    'description' => $product->get_description(),
-    'categories' => [],
-    'tags' => [],
-    'attributes' => []
-];
-
-// Get categories
-$categories = wp_get_post_terms($product_id, 'product_cat', ['fields' => 'names']);
-$product_data['categories'] = $categories;
-
-// Get tags
-$tags = wp_get_post_terms($product_id, 'product_tag', ['fields' => 'names']);
-$product_data['tags'] = $tags;
-
-// Get attributes
-$attributes = $product->get_attributes();
-foreach ($attributes as $attribute) {
-    $attribute_name = wc_attribute_label($attribute->get_name());
-    $attribute_values = [];
-    if ($attribute->is_taxonomy()) {
-        $terms = wp_get_post_terms($product_id, $attribute->get_name(), ['fields' => 'names']);
-        $attribute_values = $terms;
-    } else {
-        $attribute_values = $attribute->get_options();
-    }
-    $product_data['attributes'][] = [
-        'name' => $attribute_name,
-        'values' => $attribute_values
-    ];
-}
-```
-
----
-
-**Step 3.3: WordPress → SaaS App API Call**
-
-**What WordPress Does:**
-
-- WordPress plugin sends HTTP POST request to SaaS app
-
-**SaaS App Endpoint:** `POST /api/v1/generate-product-content`
-
-**Full URL:**
-
-```
-POST http://localhost:3000/api/v1/generate-product-content
-POST https://your-saas-app.com/api/v1/generate-product-content  (Production)
-```
-
-**Request Headers:**
-
-```
-Content-Type: application/json
-```
-
-**Request Body (WordPress sends to SaaS App):**
-
-```json
-{
-  "api_key": "695f5ac984a3f7d2e8b1c9d4e6f8a0b2",
-  "product_data": {
-    "product_id": 123,
-    "title": "Premium Wireless Headphones",
-    "short_description": "High-quality wireless headphones with noise cancellation",
-    "description": "Experience premium sound quality with our wireless headphones.",
-    "categories": ["Electronics", "Audio"],
-    "tags": ["Wireless", "Premium", "Audio"],
-    "attributes": [
-      {
-        "name": "Color",
-        "values": ["Black", "White", "Blue"]
-      },
-      {
-        "name": "Size",
-        "values": ["Large", "Medium"]
-      }
-    ]
-  }
-}
-```
-
----
-
-**Step 3.4: SaaS App Processing**
-
-**What SaaS App Does:**
-
-1. Receives product data from WordPress
-2. Validates API key
-3. Generates enhanced product content based on product data:
-   - Enhanced HTML description with sections
-   - Improved short description
-   - SEO meta title (max 60 chars)
-   - SEO meta description (150-160 chars)
-   - Focus keyword (from first category or tag)
-4. Returns generated content to WordPress
-
-```javascript
-// SaaS App - server.js
-app.post("/api/v1/generate-product-content", async (req, res) => {
-  const { api_key, product_data } = req.body;
-
-  // Find site by API key
-  const site = await WordPressSite.findOne({ api_key });
-
-  // Generate content based on product data
-  const generated_content = generateProductContent(product_data);
-
-  // Return generated content
-  res.json({
-    success: true,
-    message: "Product content generated successfully",
-    content: generated_content,
-  });
-});
-```
-
-**Generated Content Structure:**
-
-```javascript
-{
-  description: "<h2>About Premium Wireless Headphones</h2>...",
-  short_description: "Premium Premium Wireless Headphones - High quality...",
-  meta_title: "Premium Wireless Headphones",
-  meta_description: "High-quality wireless headphones... - Premium Wireless Headphones. Buy now...",
-  focus_keyword: "electronics"
-}
-```
-
----
-
-**Step 3.5: SaaS App Response**
-
-**SaaS App Response (Success):**
-
-```json
-{
-  "success": true,
-  "message": "Product content generated successfully",
-  "content": {
-    "description": "<h2>About Premium Wireless Headphones</h2>\n<p>High-quality wireless headphones...</p>",
-    "short_description": "Premium Premium Wireless Headphones - High quality product...",
-    "meta_title": "Premium Wireless Headphones",
-    "meta_description": "High-quality wireless headphones... - Premium Wireless Headphones. Buy now...",
-    "focus_keyword": "electronics"
-  }
-}
-```
-
-**HTTP Status Code:** `200 OK`
-
-**SaaS App Response (Error - Invalid API Key):**
-
-```json
-{
-  "success": false,
-  "message": "Invalid API key"
-}
-```
-
-**HTTP Status Code:** `401 Unauthorized`
-
----
-
-**Step 3.6: WordPress Updates Product**
-
-**What WordPress Does:**
-
-- WordPress plugin receives generated content from SaaS app
-- WordPress plugin updates product description
-- WordPress plugin updates short description
-- WordPress plugin sets SEO meta tags (Yoast SEO or Rank Math SEO)
-
-```php
-// WordPress Plugin - classes/settings-form.php
-// Update product with generated content
-if (isset($data['content'])) {
-    $generated_content = $data['content'];
-
-    // Update product description
-    if (isset($generated_content['description'])) {
-        wp_update_post([
-            'ID' => $product_id,
-            'post_content' => wp_slash($generated_content['description'])
-        ]);
-    }
-
-    // Update short description
-    if (isset($generated_content['short_description'])) {
-        update_post_meta($product_id, '_short_description', sanitize_textarea_field($generated_content['short_description']));
-    }
-
-    // Update SEO meta tags (Yoast SEO)
-    if (is_plugin_active('wordpress-seo/wp-seo.php')) {
-        if (isset($generated_content['meta_title'])) {
-            update_post_meta($product_id, '_yoast_wpseo_title', sanitize_text_field($generated_content['meta_title']));
-        }
-        if (isset($generated_content['meta_description'])) {
-            update_post_meta($product_id, '_yoast_wpseo_metadesc', sanitize_textarea_field($generated_content['meta_description']));
-        }
-        if (isset($generated_content['focus_keyword'])) {
-            update_post_meta($product_id, '_yoast_wpseo_focuskw', sanitize_text_field($generated_content['focus_keyword']));
-        }
-    }
-
-    // Update SEO meta tags (Rank Math SEO)
-    if (is_plugin_active('seo-by-rank-math/rank-math.php')) {
-        if (isset($generated_content['meta_title'])) {
-            update_post_meta($product_id, 'rank_math_title', sanitize_text_field($generated_content['meta_title']));
-        }
-        if (isset($generated_content['meta_description'])) {
-            update_post_meta($product_id, 'rank_math_description', sanitize_textarea_field($generated_content['meta_description']));
-        }
-        if (isset($generated_content['focus_keyword'])) {
-            update_post_meta($product_id, 'rank_math_focus_keyword', sanitize_text_field($generated_content['focus_keyword']));
-        }
-    }
-}
-```
-
-**What Gets Updated in WordPress Database:**
-
-- **wp_posts table**: `post_content` field updated with enhanced description
-- **wp_postmeta table**:
-  - `_short_description` meta key updated
-  - `_yoast_wpseo_title` meta key updated (if Yoast SEO installed)
-  - `_yoast_wpseo_metadesc` meta key updated (if Yoast SEO installed)
-  - `_yoast_wpseo_focuskw` meta key updated (if Yoast SEO installed)
-  - `rank_math_title` meta key updated (if Rank Math SEO installed)
-  - `rank_math_description` meta key updated (if Rank Math SEO installed)
-  - `rank_math_focus_keyword` meta key updated (if Rank Math SEO installed)
-
----
-
-**Final Result:** ✅ Product content enhanced and updated!
-
-**Summary:**
-
-- WordPress collects product data
-- WordPress sends product data to SaaS app
-- SaaS app generates enhanced content
-- SaaS app returns generated content
-- WordPress updates product with new content
-- WordPress sets SEO meta tags (if SEO plugin installed)
-
----
-
-### 📝 Step 4: Generate New Article - Complete Flow
+### 📝 Step 3: Generate New Article - Complete Flow
 
 #### User Action:
 
@@ -1772,7 +1399,7 @@ User clicks "Generate New Article" button (located right after "Add Post" button
 
 #### Step-by-Step Flow:
 
-**Step 4.1: WordPress Frontend (JavaScript)**
+**Step 3.1: WordPress Frontend (JavaScript)**
 
 **What WordPress Does:**
 
@@ -1788,7 +1415,7 @@ $.ajax({
   url: ajaxurl,
   type: "POST",
   data: {
-    action: "cg_generate_article",
+    action: "ml_generate_article",
     nonce: ajax_var.generate_article_nonce,
     topic: topic,
     auto_publish: false,
@@ -1798,7 +1425,7 @@ $.ajax({
 
 ---
 
-**Step 4.2: WordPress Backend (PHP) - Call SaaS API**
+**Step 3.2: WordPress Backend (PHP) - Call SaaS API**
 
 **What WordPress Does:**
 
@@ -1806,7 +1433,7 @@ $.ajax({
 - WordPress plugin calls SaaS app API with topic
 
 ```php
-// WordPress Plugin - classes/api-client.php
+// WordPress Plugin - classes/API/Client.php
 // Call SaaS API
 $data = $api_client->generateArticle($topic, false);
 
@@ -1827,7 +1454,7 @@ $data = $api_client->generateArticle($topic, false);
 
 ---
 
-**Step 4.3: WordPress → SaaS App API Call**
+**Step 3.3: WordPress → SaaS App API Call**
 
 **What WordPress Does:**
 
@@ -1860,7 +1487,7 @@ Content-Type: application/json
 
 ---
 
-**Step 4.4: SaaS App Processing**
+**Step 3.4: SaaS App Processing**
 
 **What SaaS App Does:**
 
@@ -1907,7 +1534,7 @@ app.post("/api/v1/generate-article", async (req, res) => {
 
 ---
 
-**Step 4.5: SaaS App Response**
+**Step 3.5: SaaS App Response**
 
 **SaaS App Response (Success):**
 
@@ -1935,7 +1562,7 @@ app.post("/api/v1/generate-article", async (req, res) => {
 
 ---
 
-**Step 4.6: WordPress Creates New Post**
+**Step 3.6: WordPress Creates New Post**
 
 **What WordPress Does:**
 
@@ -1945,7 +1572,7 @@ app.post("/api/v1/generate-article", async (req, res) => {
 - WordPress plugin sets categories, tags, featured image, SEO meta
 
 ```php
-// WordPress Plugin - classes/settings-form.php
+// WordPress Plugin - classes/Admin/SettingsForm.php
 // Create new post
 $post_id = wp_insert_post([
     'post_title' => $article['title'],
@@ -1992,7 +1619,7 @@ $blogHandler->setSEOMeta($post_id, $article['seo']);
 
 ---
 
-### 🔧 Step 5: Optimize Existing Article - Complete Flow
+### 🔧 Step 4: Optimize Existing Article - Complete Flow
 
 #### User Action:
 
@@ -2002,11 +1629,11 @@ User clicks "Optimize Article" button on WordPress single post edit page
 
 #### Step-by-Step Flow:
 
-**Step 5.1: WordPress Frontend (JavaScript)**
+**Step 4.1: WordPress Frontend (JavaScript)**
 
 **What WordPress Does:**
 
-- User clicks "Optimize Article" button in sidebar meta box
+- User clicks "Optimize Article" button in editor toolbar (next to Save draft button)
 - JavaScript sends AJAX request to WordPress backend
 
 ```javascript
@@ -2016,7 +1643,7 @@ $.ajax({
   url: ajaxurl,
   type: "POST",
   data: {
-    action: "cg_optimize_article",
+    action: "ml_optimize_article",
     nonce: ajax_var.optimize_article_nonce,
     post_id: postId,
   },
@@ -2025,7 +1652,7 @@ $.ajax({
 
 ---
 
-**Step 5.2: WordPress Backend (PHP) - Collect Post Data**
+**Step 4.2: WordPress Backend (PHP) - Collect Post Data**
 
 **What WordPress Does:**
 
@@ -2033,7 +1660,7 @@ $.ajax({
 - WordPress plugin collects post data (title, content, excerpt, categories, tags)
 
 ```php
-// WordPress Plugin - classes/settings-form.php
+// WordPress Plugin - classes/Admin/SettingsForm.php
 // Get post
 $post = get_post($post_id);
 
@@ -2050,7 +1677,7 @@ $post_data = [
 
 ---
 
-**Step 5.3: WordPress → SaaS App API Call**
+**Step 4.3: WordPress → SaaS App API Call**
 
 **What WordPress Does:**
 
@@ -2089,7 +1716,7 @@ Content-Type: application/json
 
 ---
 
-**Step 5.4: SaaS App Processing**
+**Step 4.4: SaaS App Processing**
 
 **What SaaS App Does:**
 
@@ -2133,7 +1760,7 @@ app.post("/api/v1/optimize-article", async (req, res) => {
 
 ---
 
-**Step 5.5: SaaS App Response**
+**Step 4.5: SaaS App Response**
 
 **SaaS App Response (Success):**
 
@@ -2158,7 +1785,7 @@ app.post("/api/v1/optimize-article", async (req, res) => {
 
 ---
 
-**Step 5.6: WordPress Updates Post**
+**Step 4.6: WordPress Updates Post**
 
 **What WordPress Does:**
 
@@ -2167,7 +1794,7 @@ app.post("/api/v1/optimize-article", async (req, res) => {
 - WordPress plugin updates SEO meta tags (Yoast/Rank Math)
 
 ```php
-// WordPress Plugin - classes/settings-form.php
+// WordPress Plugin - classes/Admin/SettingsForm.php
 // Update post with optimized content
 wp_update_post([
     'ID' => $post_id,
@@ -2220,7 +1847,7 @@ if (is_plugin_active('seo-by-rank-math/rank-math.php')) {
 WordPress plugin calls your SaaS `/connect` endpoint:
 
 ```php
-// WordPress Plugin - classes/api-client.php
+// WordPress Plugin - classes/API/Client.php
 
 public function connect() {
     $user = wp_get_current_user();
@@ -2230,9 +1857,9 @@ public function connect() {
         'name' => $user->user_email,
         'secret' => $secret,
         'webhook' => admin_url('admin-ajax.php?action=content-generator-notify'),
-        'rest' => rest_url('content-generator/v1'),
-        'success_url' => admin_url('options-general.php?page=content-generator-setting&connected=1'),
-        'failure_url' => admin_url('options-general.php?page=content-generator-setting&error=1')
+        'rest' => rest_url('marketlytics/v1'),
+        'success_url' => admin_url('options-general.php?page=marketlytics-setting&connected=1'),
+        'failure_url' => admin_url('options-general.php?page=marketlytics-setting&error=1')
     ];
 
     $response = $this->request('connect', $data, 'POST');
@@ -2252,7 +1879,7 @@ public function connect() {
 
 When SaaS wants to send blog posts, it calls WordPress REST API:
 
-**WordPress REST Endpoint:** `/wp-json/content-generator/v1/bulk-posts`
+**WordPress REST Endpoint:** `/wp-json/marketlytics/v1/bulk-posts`
 
 **Request Body:**
 
@@ -2306,7 +1933,7 @@ When SaaS wants to send blog posts, it calls WordPress REST API:
 ### Step 3: WordPress Plugin Processes Posts
 
 ```php
-// WordPress Plugin - content-generator.php
+// WordPress Plugin - content-generator.php (Main plugin file)
 
 public function restBulkPosts($request) {
     $post = $request->get_json_params();
@@ -2330,8 +1957,8 @@ public function restBulkPosts($request) {
     }
 
     // Load blog handler
-    require_once($this->plugin_path . 'classes/blog-handler.php');
-    $blogHandler = new \ContentGenerator\BlogHandler($this);
+    require_once($this->plugin_path . 'classes/Blog/Handler.php');
+    $blogHandler = new \ContentGenerator\Blog\Handler($this);
 
     // Create bulk posts
     $results = $blogHandler->createBulkPosts($post['posts']);
@@ -2431,7 +2058,7 @@ curl -X POST https://your-saas-app.com/api/v1/connect \
     "name": "admin@example.com",
     "secret": "test_secret_key_12345",
     "webhook": "https://example.com/wp-admin/admin-ajax.php?action=content-generator-notify",
-    "rest": "https://example.com/wp-json/content-generator/v1"
+    "rest": "https://example.com/wp-json/marketlytics/v1"
   }'
 ```
 
@@ -2669,7 +2296,8 @@ API_BASE_URL=https://your-saas-app.com/api/v1
 
 ## Support & Resources
 
-- **WordPress Plugin Repository**: `/content-generator/`
+- **WordPress Plugin Repository**: `/content-generator/` (Folder name remains for compatibility)
+- **Plugin Name**: Marketlytics
 - **SaaS App Repository**: `/saas-app/`
 - **Test Environment**: `http://localhost:3000`
 - **WordPress Test Site**: `http://localhost/wpdev`
@@ -2682,11 +2310,20 @@ API_BASE_URL=https://your-saas-app.com/api/v1
 - **v1.1.0** - Added image handling with Picsum.photos
 - **v1.2.0** - Added detailed logging and error handling
 - **v1.3.0** - Added statistics tracking for images
-- **v1.4.0** - Added WooCommerce product content generation endpoint
+- **v1.4.0** - Removed WooCommerce product content generation (blog-focused plugin)
 - **v1.5.0** - Added article generation and optimization endpoints
 - **v1.5.1** - Featured images now generated for bulk articles; Generate New Article button positioned after Add Post button
+- **v1.6.0** - Plugin renamed to Marketlytics; Reorganized folder structure; Removed WooCommerce integration; Updated CSS classes with ml- prefix
 
 ---
 
 **Last Updated**: November 4, 2025
-**API Version**: 1.5.1
+**API Version**: 1.6.0
+**Plugin Name**: Marketlytics
+**Plugin Structure**:
+
+- `classes/API/Client.php` - API communication
+- `classes/Blog/Handler.php` - Blog post handling
+- `classes/Admin/SettingsForm.php` - Admin settings
+- `templates/admin/settings/` - Settings templates
+- `templates/admin/popup/` - Popup templates
