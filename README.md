@@ -48,7 +48,7 @@ POST /api/v1/connect
 {
   "name": "admin@example.com",
   "secret": "a1b2c3d4e5f6...",
-  "webhook": "http://example.com/wp-admin/admin-ajax.php?action=content-generator-notify",
+  "webhook": "http://example.com/wp-admin/admin-ajax.php?action=marketlytics-notify",
   "rest": "http://example.com/wp-json/marketlytics/v1"
 }
 ```
@@ -356,7 +356,7 @@ function checkSign(data, secret) {
 {
   "name": "admin@example.com", // Admin email
   "secret": "generated_secret_key", // Secret for signing
-  "webhook": "https://example.com/wp-admin/admin-ajax.php?action=content-generator-notify",
+  "webhook": "https://example.com/wp-admin/admin-ajax.php?action=marketlytics-notify",
   "rest": "https://example.com/wp-json/marketlytics/v1", // REST API base URL
   "success_url": "https://example.com/wp-admin/options-general.php?page=marketlytics-setting&connected=1",
   "failure_url": "https://example.com/wp-admin/options-general.php?page=marketlytics-setting&error=1"
@@ -763,8 +763,8 @@ $user = wp_get_current_user();
 $data = [
     'name' => $user->user_email,  // e.g., "admin@example.com"
     'secret' => $secret,            // Generated secret key
-    'webhook' => admin_url('admin-ajax.php?action=content-generator-notify'),
-    // Result: "http://localhost/wpdev/wp-admin/admin-ajax.php?action=content-generator-notify"
+    'webhook' => admin_url('admin-ajax.php?action=marketlytics-notify'),
+    // Result: "http://localhost/wpdev/wp-admin/admin-ajax.php?action=marketlytics-notify"
     'rest' => rest_url('marketlytics/v1')
     // Result: "http://localhost/wpdev/wp-json/marketlytics/v1"
 ];
@@ -799,7 +799,7 @@ Content-Type: application/json
 {
   "name": "admin@example.com",
   "secret": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6",
-  "webhook": "http://localhost/wpdev/wp-admin/admin-ajax.php?action=content-generator-notify",
+  "webhook": "http://localhost/wpdev/wp-admin/admin-ajax.php?action=marketlytics-notify",
   "rest": "http://localhost/wpdev/wp-json/marketlytics/v1",
   "success_url": "http://localhost/wpdev/wp-admin/options-general.php?page=marketlytics-setting&connected=1",
   "failure_url": "http://localhost/wpdev/wp-admin/options-general.php?page=marketlytics-setting&error=1"
@@ -897,7 +897,7 @@ app.post("/api/v1/connect", async (req, res) => {
   user_email: "admin@example.com",
   api_key: "695f5ac984a3f7d2e8b1c9d4e6f8a0b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
   secret: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6",
-  webhook_url: "http://localhost/wpdev/wp-admin/admin-ajax.php?action=content-generator-notify",
+  webhook_url: "http://localhost/wpdev/wp-admin/admin-ajax.php?action=marketlytics-notify",
   rest_url: "http://localhost/wpdev/wp-json/marketlytics/v1",
   status: "connected",
   created_at: ISODate("2025-11-04T10:30:00.000Z"),
@@ -1036,7 +1036,7 @@ When SaaS app needs to send blog posts to WordPress (manually or automatically)
 - WordPress calls SaaS `/api/v1/generate-article` API with `count` parameter
 
 ```javascript
-// WordPress Plugin - content-generator.php (Main plugin file)
+// WordPress Plugin - marketlytics.php (Main plugin file)
 // Validates signature
 if (!checkSign($post, $settings['secret'])) {
   return error('Invalid signature');
@@ -1158,7 +1158,7 @@ $results = $blogHandler->createBulkPosts($data['articles']);
 **6. WordPress Plugin Processing (Complete Code):**
 
 ```php
-// WordPress Plugin - content-generator.php (Main plugin file)
+// WordPress Plugin - marketlytics.php (Main plugin file)
 public function restBulkPosts($request) {
     // Get request data from SaaS app
     $post = $request->get_json_params();
@@ -1346,7 +1346,7 @@ app.post("/api/v1/generate-blogs", async (req, res) => {
 **2. WordPress Plugin Receives & Processes:**
 
 ```php
-// WordPress Plugin - content-generator.php (Main plugin file)
+// WordPress Plugin - marketlytics.php (Main plugin file)
 public function restBulkPosts($request) {
     $post = $request->get_json_params();
 
@@ -1856,7 +1856,7 @@ public function connect() {
     $data = [
         'name' => $user->user_email,
         'secret' => $secret,
-        'webhook' => admin_url('admin-ajax.php?action=content-generator-notify'),
+        'webhook' => admin_url('admin-ajax.php?action=marketlytics-notify'),
         'rest' => rest_url('marketlytics/v1'),
         'success_url' => admin_url('options-general.php?page=marketlytics-setting&connected=1'),
         'failure_url' => admin_url('options-general.php?page=marketlytics-setting&error=1')
@@ -1933,7 +1933,7 @@ When SaaS wants to send blog posts, it calls WordPress REST API:
 ### Step 3: WordPress Plugin Processes Posts
 
 ```php
-// WordPress Plugin - content-generator.php (Main plugin file)
+// WordPress Plugin - marketlytics.php (Main plugin file)
 
 public function restBulkPosts($request) {
     $post = $request->get_json_params();
@@ -2057,7 +2057,7 @@ curl -X POST https://your-saas-app.com/api/v1/connect \
   -d '{
     "name": "admin@example.com",
     "secret": "test_secret_key_12345",
-    "webhook": "https://example.com/wp-admin/admin-ajax.php?action=content-generator-notify",
+    "webhook": "https://example.com/wp-admin/admin-ajax.php?action=marketlytics-notify",
     "rest": "https://example.com/wp-json/marketlytics/v1"
   }'
 ```
@@ -2296,7 +2296,7 @@ API_BASE_URL=https://your-saas-app.com/api/v1
 
 ## Support & Resources
 
-- **WordPress Plugin Repository**: `/content-generator/` (Folder name remains for compatibility)
+- **WordPress Plugin Repository**: `/marketlytics/`
 - **Plugin Name**: Marketlytics
 - **SaaS App Repository**: `/saas-app/`
 - **Test Environment**: `http://localhost:3000`
